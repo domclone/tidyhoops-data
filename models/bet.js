@@ -16,7 +16,8 @@ const betSchema = new Schema({
   gain: { type: Number },
   isParlay: { type: Number },
   nbaPlayerId: { type: Number },
-  nbaTeamId: { type: Number }
+  nbaTeamId: { type: Number },
+  playerHeadshot: { type: String }
 });
 
 const Bet = mongoose.model('Bet', betSchema);

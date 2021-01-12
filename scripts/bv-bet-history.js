@@ -29,9 +29,9 @@ const betHistory = async () => {
     const rawBets = await importJsonFromRestApi(requestUrl)
 
     const cleanedBets = rawBets.data.map(entry => {
-      const playerName = entry.events[0].players !== null ? entry.events[0].players[0].name : null
+      let playerName = entry.events[0].players !== null ? entry.events[0].players[0].name : null
+      if (playerName === 'C.J. McCollum') playerName = 'CJ McCollum' // annoying, will find a better solution
       const nbaIds = nba.getPlayerID(playerName) ? nba.getPlayerID(playerName) : null
-      console.log(nbaIds)
       const bet = {
         id: entry.id,
         date: entry.events[0].games[0].date,
@@ -47,7 +47,8 @@ const betHistory = async () => {
         gain: entry.events[0].settlement.result === 'Lost' ? -Math.abs(entry.amount) : (entry.odds * entry.amount) - entry.amount,
         isParlay: entry.isAccumulator,
         nbaPlayerId: nbaIds === null ? null : nbaIds.PlayerID,
-        nbaTeamId: nbaIds === null ? null : nbaIds.TeamID
+        nbaTeamId: nbaIds === null ? null : nbaIds.TeamID,
+        playerHeadshot: nbaIds === null ? null : `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${nbaIds.PlayerID}.png`
       }
       return bet;
     })
