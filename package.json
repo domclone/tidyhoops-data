@@ -1,0 +1,19 @@
+{
+  "name": "tidyhoops-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "data-forge": "^1.8.15",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.11.11",
+    "nba-api-client": "^1.1.1",
+    "playwright": "^1.7.1"
+  }
+}
