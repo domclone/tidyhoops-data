@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently 'npm:mongoDB' 'npm:dev'",
+    "dev": "MONGODB_URI=mongodb://localhost:27017/betHistory node ./scripts/bv-bet-history.js",
+    "mongoDB": "docker run -p 27017:27017 mongo"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +17,8 @@
     "mongoose": "^5.11.11",
     "nba-api-client": "^1.1.1",
     "playwright": "^1.7.1"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0"
   }
 }
