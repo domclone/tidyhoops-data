@@ -6,9 +6,9 @@ const getRequestUrl = require('../toolkits/extract/getRequestUrl.js');
 const getPlayerHeadshotUrl = require('../toolkits/extract/getPlayerHeadshotUrl.js');
 const { connect } = require('../mongoose');
 
-const bvUrl = 'https://www.bovada.lv/sports/player-props?overlay=login'
-const bvBetHistoryRoute = '**/api/mybets*'
-const credentials = { username: process.env.BV_USER, password: process.env.BV_PASS }
+const bvUrl = 'https://www.bovada.lv/sports/player-props?overlay=login';
+const bvBetHistoryRoute = '**/api/mybets*';
+const credentials = { username: process.env.BV_USER, password: process.env.BV_PASS };
 const selectors = {
   email: 'input[type="text"]',
   password: 'input[type = "password"]',
@@ -23,20 +23,20 @@ const betHistory = async () => {
     let requestUrl = await getRequestUrl(bvUrl, bvBetHistoryRoute, credentials, selectors);
     requestUrl.searchParams.set('bet.isActive', '0'); // we want settled bets not active bets
     requestUrl.searchParams.delete('limit'); // we want all bets 
-    requestUrl = requestUrl.href
+    requestUrl = requestUrl.href;
 
     const rawBets = await importJsonFromRestApi(requestUrl);
 
     const cleanedBets = rawBets.data.map(entry => {
-      let playerName = entry.events[0].players !== null ? entry.events[0].players[0].name : null
-      if (playerName === 'C.J. McCollum') playerName = 'CJ McCollum' // annoying, will find a better solution
+      let playerName = entry.events[0].players !== null ? entry.events[0].players[0].name : null;
+      if (playerName === 'C.J. McCollum') playerName = 'CJ McCollum'; // annoying, will find a better solution
 
       const bet = {
         id: entry.id,
         date: entry.events[0].games[0].date,
         title: entry.title,
         odds: entry.odds,
-        player: entry.events[0].players !== null ? entry.events[0].players[0].name : null,
+        player: playerName,
         setup: entry.events[0].statistic.title,
         playerTeam: entry.events[0].teams !== null ? entry.events[0].teams[0].abbreviation : null,
         homeTeam: entry.events[0].games[0].homeTeam.abbreviation,
@@ -55,7 +55,7 @@ const betHistory = async () => {
     if (connection === null) connection = await connect(); // connect to mongo
     Bet.insertMany(straightBets, { ordered: false }); // save bets to mongo
   } catch (err) {
-    console.log(`error: ${err}`)
+    console.log(`error: ${err}`);
   }
 };
 
