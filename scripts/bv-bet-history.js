@@ -57,7 +57,7 @@ const betHistory = async () => {
     if (connection === null) connection = await connect();
     Bet.insertMany(straightBets, { ordered: false }); // save bets to mongo
   } catch (err) {
-    console.log('error: ' + err)
+    console.log(`error: ${err}`)
   }
 };
 
