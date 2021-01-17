@@ -44,7 +44,7 @@ const betHistory = async () => {
         awayTeam: entry.events[0].games[0].visitingTeam.abbreviation,
         wager: entry.amount,
         result: entry.events[0].settlement.result,
-        gain: entry.events[0].settlement.result === 'Lost' ? -Math.abs(entry.amount) : (entry.odds * entry.amount) - entry.amount,
+        gain: entry.events[0].settlement.result === 'Lost' ? -Math.round(entry.amount) : Math.round((entry.odds * entry.amount) - entry.amount),
         isParlay: entry.isAccumulator,
         nbaPlayerId: nbaIds === null ? null : nbaIds.PlayerID,
         nbaTeamId: nbaIds === null ? null : nbaIds.TeamID,
@@ -55,7 +55,7 @@ const betHistory = async () => {
     const straightBets = cleanedBets.filter(bet => bet.isParlay === 0); // we want to filter out parlays for now
 
     if (connection === null) connection = await connect();
-    Bet.insertMany(straightBets); // save bets to mongo
+    Bet.insertMany(straightBets, { ordered: false }); // save bets to mongo
   } catch (err) {
     console.log('error: ' + err)
   }

@@ -18,7 +18,7 @@ const getRequestUrl = async (url, route, credentials, selectors) => {
 
     return new URL(request.url());
   } catch (err) {
-    console.log('error: ' + err)
+    console.log(`error: ${err}`)
   }
 }
 
