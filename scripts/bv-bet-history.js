@@ -19,6 +19,7 @@ let connection = null;
 
 const betHistory = async () => {
   try {
+    // get request url for bet data from bovada api
     let requestUrl = await getRequestUrl(bvUrl, bvBetHistoryRoute, credentials, selectors);
 
     requestUrl.searchParams.set('bet.isActive', '0'); // we want settled bets not active bets
@@ -26,12 +27,13 @@ const betHistory = async () => {
 
     requestUrl = requestUrl.href
 
-    const rawBets = await importJsonFromRestApi(requestUrl)
+    const rawBets = await importJsonFromRestApi(requestUrl);
 
     const cleanedBets = rawBets.data.map(entry => {
       let playerName = entry.events[0].players !== null ? entry.events[0].players[0].name : null
       if (playerName === 'C.J. McCollum') playerName = 'CJ McCollum' // annoying, will find a better solution
-      const nbaIds = nba.getPlayerID(playerName) ? nba.getPlayerID(playerName) : null
+      const nbaIds = nba.getPlayerID(playerName) ? nba.getPlayerID(playerName) : null // uses nba-api-client package
+
       const bet = {
         id: entry.id,
         date: entry.events[0].games[0].date,
@@ -54,7 +56,7 @@ const betHistory = async () => {
     })
     const straightBets = cleanedBets.filter(bet => bet.isParlay === 0); // we want to filter out parlays for now
 
-    if (connection === null) connection = await connect();
+    if (connection === null) connection = await connect(); // connect to mongo
     Bet.insertMany(straightBets, { ordered: false }); // save bets to mongo
   } catch (err) {
     console.log(`error: ${err}`)
