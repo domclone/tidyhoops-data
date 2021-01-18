@@ -30,6 +30,7 @@ const betHistory = async () => {
     const cleanedBets = rawBets.data.map(entry => {
       let playerName = entry.events[0].players !== null ? entry.events[0].players[0].name : null;
       if (playerName === 'C.J. McCollum') playerName = 'CJ McCollum'; // annoying, will find a better solution
+      if (playerName === 'RJ Barrett Jr.') playerName = 'RJ Barrett'; // annoying, will find a better solution
 
       const bet = {
         id: entry.id,
