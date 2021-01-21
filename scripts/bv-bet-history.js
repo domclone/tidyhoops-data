@@ -21,16 +21,16 @@ const betHistory = async () => {
   try {
     // get request url for bet data from bovada api
     let requestUrl = await getRequestUrl(bvUrl, bvBetHistoryRoute, credentials, selectors);
-    requestUrl.searchParams.set('bet.isActive', '0'); // we want settled bets not active bets
+    requestUrl.searchParams.delete('bet.isActive'); // we want settled and pending bets 
     requestUrl.searchParams.delete('limit'); // we want all bets 
     requestUrl = requestUrl.href;
 
     const rawBets = await importJsonFromRestApi(requestUrl);
 
-    const cleanedBets = rawBets.data.map(entry => {
+    const cleanedBets = rawBets.data.map((entry) => {
       let playerName = entry.events[0].players !== null ? entry.events[0].players[0].name : null;
-      if (playerName === 'C.J. McCollum') playerName = 'CJ McCollum'; // annoying, will find a better solution
-      if (playerName === 'RJ Barrett Jr.') playerName = 'RJ Barrett'; // annoying, will find a better solution
+      if (playerName === 'C.J. McCollum') playerName = 'CJ McCollum';
+      if (playerName === 'RJ Barrett Jr.') playerName = 'RJ Barrett';
 
       const bet = {
         id: entry.id,
@@ -51,7 +51,7 @@ const betHistory = async () => {
 
       return bet;
     })
-    const straightBets = cleanedBets.filter(bet => bet.isParlay === 0); // we want to filter out parlays for now
+    const straightBets = cleanedBets.filter(bet => bet.id !== 11613395 && bet.id !== 11864952 && bet.isParlay === 0); // we want to filter out parlays for now
 
     if (connection === null) connection = await connect(); // connect to mongo
     Bet.insertMany(straightBets, { ordered: false }); // save bets to mongo
