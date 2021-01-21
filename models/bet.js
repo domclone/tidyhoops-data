@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const betSchema = new Schema({
-  id: { type: String, unique: true },
+  id: { type: Number, unique: true },
   date: { type: Date },
   title: { type: String },
   odds: { type: Number },
