@@ -14,7 +14,7 @@ const getRequestUrl = async (url, route, credentials, selectors) => {
     }
 
     const request = await page.waitForRequest(route);
-    await browser.close(); // without the above, the browser will close too early
+    await browser.close();
 
     return new URL(request.url());
   } catch (err) {
