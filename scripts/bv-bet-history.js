@@ -51,7 +51,7 @@ const betHistory = async () => {
 
       return bet;
     })
-    const straightBets = cleanedBets.filter(bet => bet.id !== 11613395 && bet.id !== 11864952 && bet.isParlay === 0); // we want to filter out parlays for now
+    const straightBets = cleanedBets.filter(bet => bet.id !== 11613395 && bet.id !== 11864952 && bet.result !== 'Voided' && bet.isParlay === 0); // we want to filter out parlays for now
 
     if (connection === null) connection = await connect(); // connect to mongo
     await Bet.insertMany(straightBets, { ordered: false }); // save bets to mongo
